@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>{{page_title}}</h1>
+{% for entry in entries %}
+<div>
+    <h3><a href="/blog/entry/{{entry.id}}">
+    {{entry.Title}}</a></h3>
+    <div>{{entry.Content}}</div>
+    <ul>
+        <li>Category : {{entry.Category.Title}}</li>
+        <li>Tags :
+            {% for tag in entry.Tags.all %}
+            <span>{{tag.Title}},</span>
+            {%  endfor %}</li>
+        <li>{{entry.created}}</li>
+    </ul>
+</div>
+{% endfor %}
+<div>현재 페이지 : {{current_page}}쪽</div>
+<div>
+    {% for page_num in page_range %}
+    <span><a href="/blog/page/{{page_num}}">[{{page_num}}]</a></span>
+    {% endfor %}
+</div>
+</body>
+</html>

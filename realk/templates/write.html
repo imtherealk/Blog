@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>{{page_title}}</h1>
+
+<form method="post" action="/blog/add/post/">
+    <p><label for="title">제목 </label><input type="text" id="title" name="title" value=""/></p>
+    <p><label for="category">카테고리 </label>
+        <select name="category" id="category">
+            {% for category in categories %}
+            <option value="{{category.id}}">{{category.Title}}</option>
+            {% endfor %}
+        </select></p>
+    <p><label for="tags">태그 </label><input type="text" id="tags" name="tags" value=""></p>
+    <p><textarea id="content" name="content"></textarea></p>
+    <p><input type="submit" value="제출하기"></p>
+</form>
+</body>
+</html>
