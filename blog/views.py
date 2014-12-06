@@ -118,7 +118,5 @@ def add_comment(request):
 
     new_cmt = Comments(Name=cmt_name, Password=cmt_password, Content=cmt_content, Entry=entry)
     new_cmt.save()
-    entry.Comments += 1
-    entry.save()
 
     return redirect('blog.views.read', entry_id=entry.id)
