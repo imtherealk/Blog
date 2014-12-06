@@ -2,7 +2,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-from blog.models import Entries, Categories
+from blog.models import Entries, Categories, TagModel
 from django.template import Context, loader
 
 def index(request, page=1):
@@ -72,9 +72,16 @@ def add_post(request):
     entry_category = request.POST.get('category', '')
     if entry_category == '':
         return HttpResponse("카테고리 입력")
+    tags = filter(lambda x: x != '', map(lambda x: x.strip(), request.POST.get('tags', '').split(',')))
+    tag_list = map(lambda tag: TagModel.objects.get_or_create(Title=tag)[0], tags)
 
     entry_category = Categories.objects.get(id=int(entry_category))
     new_entry = Entries(Title=entry_title, Content=entry_content, Category=entry_category)
     new_entry.save()
 
-    return redirect('blog.views.read', entry_id = new_entry.id)
+    for tag in tag_list:
+        new_entry.Tags.add(tag)
+    if tag_list:
+        new_entry.save()
+
+    return redirect('blog.views.read', entry_id=new_entry.id)
