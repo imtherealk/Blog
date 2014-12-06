@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from blog.models import Entries, Categories, TagModel
 from django.template import Context, loader
 
+
 def index(request, page=1):
     page = int(page)
     per_page = 5
@@ -31,6 +32,7 @@ def index(request, page=1):
     })
     return HttpResponse(tpl.render(ctx))
 
+
 def read(request, entry_id=None):
     page_title = '블로그 글 읽기!'
     current_entry = Entries.objects.get(id=int(entry_id))
@@ -51,6 +53,7 @@ def read(request, entry_id=None):
     })
     return HttpResponse(tpl.render(ctx))
 
+
 def write_form(request):
     page_title = '블로그 글 쓰기'
     categories = Categories.objects.all()
@@ -60,6 +63,7 @@ def write_form(request):
         'categories': categories
     })
     return HttpResponse(tpl.render(ctx))
+
 
 @csrf_exempt
 def add_post(request):

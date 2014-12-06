@@ -7,8 +7,10 @@ class TagModel(models.Model):
     def __str__(self):
         return 'models.TagModel(%s)' % self.Title
 
+
 class Categories(models.Model):
     Title = models.CharField(max_length=40, null=False)
+
 
 class Entries(models.Model):
     Title = models.CharField(max_length=80, null=False)
@@ -17,6 +19,7 @@ class Entries(models.Model):
     Category = models.ForeignKey(Categories)
     Tags = models.ManyToManyField(TagModel)
     Comments = models.PositiveSmallIntegerField(default=0, null=True)
+
 
 class Comments(models.Model):
     Name = models.CharField(max_length=20, null=False)
