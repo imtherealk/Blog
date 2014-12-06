@@ -17,6 +17,8 @@
         <li>{{current_entry.Comments}}</li>
     </ul>
 </div>
+<div>{% include 'comments.html' %}
+    {% include 'comment_form.html' %}</div>
 <ul>{% if prev_entry %}
     <a href="/blog/entry/{{prev_entry.id}}">이전글</a>
     {% endif %}

@@ -2,8 +2,9 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-from blog.models import Entries, Categories, TagModel
+from blog.models import Entries, Categories, TagModel, Comments
 from django.template import Context, loader
+import hashlib
 
 
 def index(request, page=1):
@@ -44,12 +45,16 @@ def read(request, entry_id=None):
         next_entry = current_entry.get_next_by_created()
     except:
         next_entry = None
+
+    comments = Comments.objects.filter(Entry=current_entry).order_by('created')
+    current_entry.Comments = len(comments)
     tpl = loader.get_template('read.html')
     ctx = Context({
         'page_title': page_title,
         'current_entry': current_entry,
         'prev_entry': prev_entry,
-        'next_entry': next_entry
+        'next_entry': next_entry,
+        'comments': comments
     })
     return HttpResponse(tpl.render(ctx))
 
@@ -89,3 +94,31 @@ def add_post(request):
         new_entry.save()
 
     return redirect('blog.views.read', entry_id=new_entry.id)
+
+
+@csrf_exempt
+def add_comment(request):
+    cmt_name = request.POST.get('name', '')
+    if cmt_name == '':
+        return HttpResponse("이름 입력하세요")
+
+    cmt_password = request.POST.get('password', '')
+    if cmt_password == '':
+        return HttpResponse("비밀번호 입력하세요")
+    cmt_password = hashlib.md5(cmt_password.encode('utf-8')).hexdigest()
+
+    cmt_content = request.POST.get("content", '')
+    if cmt_content == '':
+        return HttpResponse("내용 입력하세요")
+
+    entry_id = request.POST.get('entry_id', '')
+    if entry_id == '':
+        return HttpResponse("댓글 달 글을 지정해야 합니다.")
+    entry = Entries.objects.get(id=entry_id)
+
+    new_cmt = Comments(Name=cmt_name, Password=cmt_password, Content=cmt_content, Entry=entry)
+    new_cmt.save()
+    entry.Comments += 1
+    entry.save()
+
+    return redirect('blog.views.read', entry_id=entry.id)

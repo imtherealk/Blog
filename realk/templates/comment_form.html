@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <form method="post" action="/blog/add/comment/">
+        <input type="hidden" name="entry_id" value="{{current_entry.id}}"/>
+        <p><label for="name">글쓴이</label>
+            <input type="text" id="name" name="name" value=""/></p>
+        <p><label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" value=""/></p>
+        <p><textarea id="content" name="content"></textarea></p>
+        <p><input type="submit" value="댓글 달기"/></p>
+    </form>
+</body>
+</html>

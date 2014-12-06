@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     url(r'^blog/entry/(?P<entry_id>\d+)/$', 'blog.views.read'),
     url(r'^blog/write/$', 'blog.views.write_form'),
     url(r'^blog/add/post/$', 'blog.views.add_post'),
+    url(r'^blog/add/comment/$', 'blog.views.add_comment'),
     url(r'^admin/', include(admin.site.urls)),
 )
