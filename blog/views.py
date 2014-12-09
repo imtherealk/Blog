@@ -36,7 +36,10 @@ def index(request, page=1):
 
 def read(request, entry_id=None):
     page_title = '블로그 글 읽기!'
-    current_entry = Entries.objects.get(id=int(entry_id))
+    try:
+        current_entry = Entries.objects.get(id=int(entry_id))
+    except:
+        return HttpResponse("해당 글이 없습니다.")
     try:
         prev_entry = current_entry.get_previous_by_created()
     except:
@@ -95,6 +98,16 @@ def add_post(request):
 
     return redirect('blog.views.read', entry_id=new_entry.id)
 
+
+@csrf_exempt
+def delete_post(request, entry_id=None):
+    try:
+        del_entry = Entries.objects.get(id=int(entry_id))
+    except:
+        return HttpResponse("해당 글이 없습니다")
+    del_entry.delete()
+
+    return redirect('blog.views.index', page=1)
 
 @csrf_exempt
 def add_comment(request):

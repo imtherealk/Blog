@@ -7,6 +7,9 @@
 <body>
 <div>
     <h3><a href="/blog/entry/{{current_entry.id}}">{{current_entry.Title}}</a></h3>
+    <form method="post" action="/blog/entry/{{current_entry.id}}/delete/">
+      <p><input type="submit" value="글 삭제"></p>
+    </form>
     <div>{{current_entry.Content}}</div>
     <ul>
         <li>{{current_entry.Category.Title}}</li>
