@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-
+from django.conf import settings
 
 admin.autodiscover()
 urlpatterns = patterns('',
@@ -11,5 +11,7 @@ urlpatterns = patterns('',
     url(r'^blog/write/$', 'blog.views.write_form'),
     url(r'^blog/add/post/$', 'blog.views.add_post'),
     url(r'^blog/add/comment/$', 'blog.views.add_comment'),
+    url(r'^blog/get_comments/(?P<entry_id>d+)/$', 'blog.views.get_comments'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.ROOT_PATH + '/media'}),
 )
