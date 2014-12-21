@@ -133,3 +133,16 @@ def add_comment(request):
     new_cmt.save()
 
     return redirect('blog.views.read', entry_id=entry.id)
+
+@csrf_exempt
+def get_comments(request, entry_id=None):
+    comments = Comments.objects.filter(Entry=entry_id).order_by('created')
+
+    tpl = loader.get_template('comments.html')
+    ctx = Context({'comments': comments})
+
+    if request.is_ajax():
+        with_layout = False
+    else:
+        with_layout = True
+    return HttpResponse(tpl.render(ctx))
