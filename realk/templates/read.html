@@ -1,32 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-<div>
-    <h3><a href="/blog/entry/{{current_entry.id}}">{{current_entry.Title}}</a></h3>
+{% include 'layout/header.html' %}
+
+<h1>{{page_title}}</h1>
+<div id="content">
+    <div class="post_entry">
+        <h3 id="post_{{current_entry.id}}" class="post_title">
+            <a href="/blog/entry/{{current_entry.id}}">{{current_entry.Title}}</a>
+        </h3>
+
+        <p class="post_info">카테고리 : [ {{current_entry.Category.Title}} ] /
+            <a href="/blog/entry/{{current_entry.id}}">{{current_entry.created}}</a>
+        </p>
+
+        <div class="content_box">{{current_entry.Content}}</div>
+
+        <ul class="post_meta">
+            <li>태그 : {% for tag in current_entry.Tags.all %}
+            <span>{{tag.Title}}</span>
+            {% endfor %}</li>
+            <li>댓글 ({{current_entry.Comments}})</li>
+        </ul>
+
+        <div id="comment_box_{{current_entry.id}}" style="display: block;">
+            {% include 'comments.html' %}
+        </div>
+
+    </div>
+
     <form method="post" action="/blog/entry/{{current_entry.id}}/delete/">
       <p><input type="submit" value="글 삭제"></p>
     </form>
-    <div>{{current_entry.Content}}</div>
+
     <ul>
-        <li>{{current_entry.Category.Title}}</li>
-        <li>{% for tag in current_entry.Tags.all %}
-            <span>{{tag.Title}}</span>
-            {% endfor %}</li>
-        <li>{{current_entry.created}}</li>
-        <li>댓글 수 : {{current_entry.Comments}}</li>
+        {% if prev_entry %}
+        <li><a href="/blog/entry/{{prev_entry.id}}">이전글 ({{prev_entry.Title}})</a></li>
+        {% endif %}
+
+        {% if next_entry %}
+        <li><a href="/blog/entry/{{next_entry.id}}">다음글 ({{next_entry.Title}})</a></li>
+        {% endif %}
     </ul>
 </div>
-<div>{% include 'comments.html' %}
-    {% include 'comment_form.html' %}</div>
-<ul>{% if prev_entry %}
-    <a href="/blog/entry/{{prev_entry.id}}">이전글</a>
-    {% endif %}
-    {% if next_entry %}
-    <a href="/blog/entry/{{next_entry.id}}">다음글</a></ul>
-    {% endif %}
-</body>
-</html>
+
+{% include 'layout/footer.html' %}
