@@ -6,7 +6,7 @@
         <h3 id="post_{{entry.id}}" class="post_title"><a href="/blog/entry/{{entry.id}}">
     {{entry.Title}}</a></h3>
         <p class="post_info">카테고리 : [ {{entry.Category.Title}} ] /
-            <a href="blog/entry/{{entry.id}}">{{entry.created}}</a></p>
+            <a href="/blog/entry/{{entry.id}}">{{entry.created}}</a></p>
 
         <div class="content_box">{{entry.Content}}</div>
 
@@ -14,8 +14,10 @@
             <li>태그 : {% for tag in entry.Tags.all %}
             <span>{{tag.Title}}</span>
             {% endfor %}</li>
-        <li><a href="/blog/get_comments/{{entry.id}}">댓글({{entry.Comments}})</a></li>
+        <li><a href="/blog/get_comments/{{entry.id}}/" onclick="toggle_comment_box(this.href,'{{entry.id}}'); return false;">
+            댓글({{entry.Comments}})</a></li>
         </ul>
+        <div id="comment_box_{{entry.id}}" style="display: none;"></div>
     </div>
     {% endfor %}
 </div>
