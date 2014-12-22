@@ -10,7 +10,7 @@ import hashlib
 def index(request, page=1):
     page = int(page)
     per_page = 5
-    last_page = int(Entries.objects.count()/per_page)
+    last_page = int(Entries.objects.count()/per_page) + 1
     if Entries.objects.count() % per_page > 0:
         last_page += 1
     if not isinstance(page, int):
@@ -22,7 +22,7 @@ def index(request, page=1):
     start_pos = (page-1)*per_page
     end_pos = start_pos + per_page
     page_title = '블로그 글 목록'
-    page_range = range(1, last_page+1)
+    page_range = range(1, last_page)
     entries = Entries.objects.all().order_by('-created')[start_pos:end_pos]
     tpl = loader.get_template('list.html')
     ctx = Context({
