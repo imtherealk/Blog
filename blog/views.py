@@ -49,9 +49,7 @@ def read(request, entry_id=None):
         next_entry = current_entry.get_next_by_created()
     except:
         next_entry = None
-
     comments = Comments.objects.filter(Entry=current_entry).order_by('created')
-    current_entry.Comments = len(comments)
     tpl = loader.get_template('read.html')
     ctx = Context({
         'page_title': page_title,
@@ -133,17 +131,36 @@ def add_comment(request):
     new_cmt = Comments(Name=cmt_name, Password=cmt_password, Content=cmt_content, Entry=entry)
     new_cmt.save()
 
-    return redirect('blog.views.read', entry_id=entry.id)
+    comments = Comments.objects.filter(Entry=entry).order_by('created')
+    entry.Comments = len(comments)
+    entry.save()
+
+    if request.is_ajax():
+        return_data = {
+            'entry_id': entry.id,
+            'msg': get_comments(request, entry.id, True)
+        }
+        return HttpResponse(json.dumps(return_data))
+    else:
+        return redirect('blog.views.read', entry_id=entry.id)
 
 @csrf_exempt
-def get_comments(request, entry_id=None):
+def get_comments(request, entry_id=None, is_inner=False):
+    current_entry = Entries.objects.get(id=int(entry_id))
     comments = Comments.objects.filter(Entry=entry_id).order_by('created')
-
-    tpl = loader.get_template('comments.html')
-    ctx = Context({'comments': comments})
 
     if request.is_ajax():
         with_layout = False
     else:
         with_layout = True
-    return HttpResponse(tpl.render(ctx))
+
+    tpl = loader.get_template('comments.html')
+    ctx = Context({
+        'current_entry': current_entry,
+        'comments': comments,
+        'with_layout': with_layout
+    })
+    if is_inner:
+        return tpl.render(ctx)
+    else:
+        return HttpResponse(tpl.render(ctx))

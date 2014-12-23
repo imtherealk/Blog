@@ -9,3 +9,23 @@ var toggle_comment_box = function(url, entry_id) {
         elt.show();
     }
 }
+
+var add_comment = function(form_elt){
+    var form_elt = $(form_elt);
+
+    var ajax = new Ajax.Request(form_elt.action, {
+                method: form_elt.method,
+                parameters: form_elt.serialize(),
+                onSuccess: function(req) {
+                    if(req.responseText.isJSON()){
+                        var_result = req.responseText.evalJSON(true);
+                        $('comment_box_'+_result['entry_id']).update(_result['msg']);
+                    }
+                    else{
+                        alert(req.responseText);
+                    }
+                },
+                onFailure: function(req){
+                }
+    });
+}

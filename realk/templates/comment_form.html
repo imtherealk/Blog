@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-    <form method="post" action="/blog/add/comment/">
+    <form method="post" action="/blog/add/comment/" onsubmit="add_comment(this); return false;">
         <input type="hidden" name="entry_id" value="{{current_entry.id}}"/>
         <p><label for="name">글쓴이</label>
             <input type="text" id="name" name="name" value=""/></p>
