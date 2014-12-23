@@ -168,3 +168,13 @@ def get_comments(request, entry_id=None, is_inner=False):
         return tpl.render(ctx)
     else:
         return HttpResponse(tpl.render(ctx))
+
+
+def login(request):
+    request.session['blog_login_sess'] = 'realk'
+    return HttpResponse('[%s] logged in successfully' % request.session['blog_login_sess'])
+
+
+def logout(request):
+    del request.session['blog_login_sess']
+    return HttpResponse('logged out successfully')
