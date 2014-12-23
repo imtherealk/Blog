@@ -17,7 +17,7 @@
             <li>태그 : {% for tag in current_entry.tags.all %}
             <span>{{tag.title}}</span>
             {% endfor %}</li>
-            <li>댓글 ({{len_cmt}})</li>
+            <li>댓글 ({{current_entry.comment_num}})</li>
         </ul>
 
         <div id="comment_box_{{current_entry.id}}" style="display: block;">
@@ -36,7 +36,7 @@
         {% endif %}
 
         {% if next_entry %}
-        <li><a href="/blog/entry/{{next_entry.id}}">다음글 ({{next_entry.title}})</a></li>
+        <li><a href="/blog/entry/{{next_entry.id}}">다음글 ({{next_entry.itle}})</a></li>
         {% endif %}
     </ul>
 </div>

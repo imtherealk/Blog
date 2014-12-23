@@ -11,14 +11,24 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField(
+        migrations.RemoveField(
             model_name='comments',
-            old_name='Entry',
-            new_name='entry',
+            name='Entry',
         ),
-        migrations.RenameField(
+        migrations.RemoveField(
             model_name='entries',
-            old_name='Tags',
-            new_name='tags',
+            name='Tags',
+        ),
+        migrations.AddField(
+            model_name='comments',
+            name='entry',
+            field=models.ForeignKey(to='blog.Entries'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='entries',
+            name='tags',
+            field=models.ManyToManyField(to='blog.TagModel'),
+            preserve_default=True,
         ),
     ]

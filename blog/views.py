@@ -26,6 +26,7 @@ def index(request, page=1):
     page_title = '블로그 글 목록'
     page_range = range(1, last_page+1)
     entries = Entries.objects.all().order_by('-created')[start_pos:end_pos]
+
     tpl = loader.get_template('list.html')
     ctx = Context({
         'page_title': page_title,
@@ -51,7 +52,6 @@ def read(request, entry_id=None):
     except:
         next_entry = None
     comments = Comments.objects.filter(entry=current_entry).order_by('created')
-    len_cmt = len(comments)
     tpl = loader.get_template('read.html')
     ctx = Context({
         'page_title': page_title,
@@ -59,7 +59,6 @@ def read(request, entry_id=None):
         'prev_entry': prev_entry,
         'next_entry': next_entry,
         'comments': comments,
-        'len_cmt': len_cmt
     })
     return HttpResponse(tpl.render(ctx))
 
@@ -111,6 +110,7 @@ def delete_post(request, entry_id=None):
 
     return redirect('blog.views.index', page=1)
 
+
 @csrf_exempt
 def add_comment(request):
     cmt_name = request.POST.get('name', '')
@@ -134,9 +134,9 @@ def add_comment(request):
     new_cmt = Comments(name=cmt_name, password=cmt_password, content=cmt_content, entry=entry)
     new_cmt.save()
 
- #   comments = Comments.objects.filter(entry=entry).order_by('created')
- #   entry.Comments = len(comments)
- #   entry.save()
+    comments = Comments.objects.filter(entry=entry).order_by('created')
+    entry.comment_num = len(comments)
+    entry.save()
 
     if request.is_ajax():
         return_data = {
@@ -146,6 +146,7 @@ def add_comment(request):
         return HttpResponse(json.dumps(return_data))
     else:
         return redirect('blog.views.read', entry_id=entry.id)
+
 
 @csrf_exempt
 def get_comments(request, entry_id=None, is_inner=False):
