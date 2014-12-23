@@ -11,7 +11,7 @@
             <a href="/blog/entry/{{current_entry.id}}">{{current_entry.created}}</a>
         </p>
 
-        <div class="content_box">{{current_entry.content}}</div>
+        <div class="content_box">{{current_entry.content|linebreaks}}</div>
 
         <ul class="post_meta">
             <li>태그 : {% for tag in current_entry.tags.all %}

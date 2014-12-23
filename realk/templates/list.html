@@ -8,7 +8,7 @@
         <p class="post_info">카테고리 : [ {{entry.category.title}} ] /
             <a href="/blog/entry/{{entry.id}}">{{entry.created}}</a></p>
 
-        <div class="content_box">{{entry.content}}</div>
+        <div class="content_box">{{entry.content|linebreaks}}</div>
 
         <ul class="post_meta">
             <li>태그 : {% for tag in entry.tags.all %}
