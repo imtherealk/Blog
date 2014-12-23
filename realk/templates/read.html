@@ -4,20 +4,20 @@
 <div id="content">
     <div class="post_entry">
         <h3 id="post_{{current_entry.id}}" class="post_title">
-            <a href="/blog/entry/{{current_entry.id}}">{{current_entry.Title}}</a>
+            <a href="/blog/entry/{{current_entry.id}}">{{current_entry.title}}</a>
         </h3>
 
-        <p class="post_info">카테고리 : [ {{current_entry.Category.Title}} ] /
+        <p class="post_info">카테고리 : [ {{current_entry.category.title}} ] /
             <a href="/blog/entry/{{current_entry.id}}">{{current_entry.created}}</a>
         </p>
 
-        <div class="content_box">{{current_entry.Content}}</div>
+        <div class="content_box">{{current_entry.content}}</div>
 
         <ul class="post_meta">
-            <li>태그 : {% for tag in current_entry.Tags.all %}
-            <span>{{tag.Title}}</span>
+            <li>태그 : {% for tag in current_entry.tags.all %}
+            <span>{{tag.title}}</span>
             {% endfor %}</li>
-            <li>댓글 ({{current_entry.Comments}})</li>
+            <li>댓글 ({{len_cmt}})</li>
         </ul>
 
         <div id="comment_box_{{current_entry.id}}" style="display: block;">
@@ -32,11 +32,11 @@
 
     <ul>
         {% if prev_entry %}
-        <li><a href="/blog/entry/{{prev_entry.id}}">이전글 ({{prev_entry.Title}})</a></li>
+        <li><a href="/blog/entry/{{prev_entry.id}}">이전글 ({{prev_entry.title}})</a></li>
         {% endif %}
 
         {% if next_entry %}
-        <li><a href="/blog/entry/{{next_entry.id}}">다음글 ({{next_entry.Title}})</a></li>
+        <li><a href="/blog/entry/{{next_entry.id}}">다음글 ({{next_entry.title}})</a></li>
         {% endif %}
     </ul>
 </div>

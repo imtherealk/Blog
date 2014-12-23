@@ -2,28 +2,31 @@ from django.db import models
 
 
 class TagModel(models.Model):
-    Title = models.CharField(max_length=20, null=False)
+    title = models.CharField(max_length=20, null=False)
 
     def __str__(self):
-        return 'models.TagModel(%s)' % self.Title
+        return 'models.TagModel(%s)' % self.title
 
 
 class Categories(models.Model):
-    Title = models.CharField(max_length=40, null=False)
+    title = models.CharField(max_length=40, null=False)
+
+    def __str__(self):
+        return 'models.Categories(%s)' % self.title
 
 
 class Entries(models.Model):
-    Title = models.CharField(max_length=80, null=False)
-    Content = models.TextField(null=False)
+    title = models.CharField(max_length=80, null=False)
+    content = models.TextField(null=False)
     created = models.DateTimeField(auto_now_add=True,auto_now=True)
-    Category = models.ForeignKey(Categories)
-    Tags = models.ManyToManyField(TagModel)
-    Comments = models.PositiveSmallIntegerField(default=0, null=True)
+    category = models.ForeignKey(Categories)
+    tags = models.ManyToManyField(TagModel)
+   # comments = models.PositiveSmallIntegerField(default=0, null=True)
 
 
 class Comments(models.Model):
-    Name = models.CharField(max_length=20, null=False)
-    Password = models.CharField(max_length=32, null=False)
-    Content = models.TextField(max_length=2000, null=False)
+    name = models.CharField(max_length=20, null=False)
+    password = models.CharField(max_length=32, null=False)
+    content = models.TextField(max_length=2000, null=False)
     created = models.DateTimeField(auto_now_add=True, auto_now=True)
-    Entry = models.ForeignKey(Entries)
+    entry = models.ForeignKey(Entries)

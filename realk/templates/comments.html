@@ -2,8 +2,8 @@
     {% if comments|length %}
     <ul>
     {% for comment in comments %}
-        <li>{{comment.Name}}님이 {{comment.created}}에 남긴 댓글
-        <p>{{comment.Content}}</p></li>
+        <li>{{comment.name}}님이 {{comment.created}}에 남긴 댓글
+        <p>{{comment.content}}</p></li>
     {% endfor %}
     </ul>
     {% else %}

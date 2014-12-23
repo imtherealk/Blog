@@ -15,6 +15,7 @@ def index(request, page=1):
     last_page = int(Entries.objects.count()/per_page)
     if Entries.objects.count() % per_page > 0:
         last_page += 1
+    last_page = max(last_page, 1)
   #  if not isinstance(page, int):
     if page < 1:
         raise Http404
@@ -49,14 +50,16 @@ def read(request, entry_id=None):
         next_entry = current_entry.get_next_by_created()
     except:
         next_entry = None
-    comments = Comments.objects.filter(Entry=current_entry).order_by('created')
+    comments = Comments.objects.filter(entry=current_entry).order_by('created')
+    len_cmt = len(comments)
     tpl = loader.get_template('read.html')
     ctx = Context({
         'page_title': page_title,
         'current_entry': current_entry,
         'prev_entry': prev_entry,
         'next_entry': next_entry,
-        'comments': comments
+        'comments': comments,
+        'len_cmt': len_cmt
     })
     return HttpResponse(tpl.render(ctx))
 
@@ -84,14 +87,14 @@ def add_post(request):
     if entry_category == '':
         return HttpResponse("카테고리 입력")
     tags = filter(lambda x: x != '', map(lambda x: x.strip(), request.POST.get('tags', '').split(',')))
-    tag_list = map(lambda tag: TagModel.objects.get_or_create(Title=tag)[0], tags)
+    tag_list = map(lambda tag: TagModel.objects.get_or_create(title=tag)[0], tags)
 
     entry_category = Categories.objects.get(id=int(entry_category))
-    new_entry = Entries(Title=entry_title, Content=entry_content, Category=entry_category)
+    new_entry = Entries(title=entry_title, content=entry_content, category=entry_category)
     new_entry.save()
 
     for tag in tag_list:
-        new_entry.Tags.add(tag)
+        new_entry.tags.add(tag)
     if tag_list:
         new_entry.save()
 
@@ -128,12 +131,12 @@ def add_comment(request):
         return HttpResponse("댓글 달 글을 지정해야 합니다.")
     entry = Entries.objects.get(id=entry_id)
 
-    new_cmt = Comments(Name=cmt_name, Password=cmt_password, Content=cmt_content, Entry=entry)
+    new_cmt = Comments(name=cmt_name, password=cmt_password, content=cmt_content, entry=entry)
     new_cmt.save()
 
-    comments = Comments.objects.filter(Entry=entry).order_by('created')
-    entry.Comments = len(comments)
-    entry.save()
+ #   comments = Comments.objects.filter(entry=entry).order_by('created')
+ #   entry.Comments = len(comments)
+ #   entry.save()
 
     if request.is_ajax():
         return_data = {
@@ -147,7 +150,7 @@ def add_comment(request):
 @csrf_exempt
 def get_comments(request, entry_id=None, is_inner=False):
     current_entry = Entries.objects.get(id=int(entry_id))
-    comments = Comments.objects.filter(Entry=entry_id).order_by('created')
+    comments = Comments.objects.filter(entry=entry_id).order_by('created')
 
     if request.is_ajax():
         with_layout = False
