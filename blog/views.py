@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from blog.models import Entries, Categories, TagModel, Comments
 from django.template import Context, loader
+import json
 import hashlib
 
 
 def index(request, page=1):
     page = int(page)
     per_page = 5
-    last_page = int(Entries.objects.count()/per_page) + 1
+    last_page = int(Entries.objects.count()/per_page)
     if Entries.objects.count() % per_page > 0:
         last_page += 1
-    if not isinstance(page, int):
-        return redirect('blog.views.index', page=1)
+  #  if not isinstance(page, int):
     if page < 1:
-        return redirect('blog.views.index', page=1)
+        raise Http404
     if page > last_page:
-        return redirect('blog.views.index', page=last_page)
+        raise Http404
     start_pos = (page-1)*per_page
     end_pos = start_pos + per_page
     page_title = '블로그 글 목록'
-    page_range = range(1, last_page)
+    page_range = range(1, last_page+1)
     entries = Entries.objects.all().order_by('-created')[start_pos:end_pos]
     tpl = loader.get_template('list.html')
     ctx = Context({
