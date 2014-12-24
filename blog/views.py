@@ -99,7 +99,7 @@ def add_post(request):
     entry_category = request.POST.get('category', '')
     if entry_category == '':
         return HttpResponse("카테고리 입력")
-    tags = [x for x in [x.strip() for x in request.POST.get('tags', '').split(',')] if x != '']
+    tags = [x for x in (x.strip() for x in request.POST.get('tags', '').split(',')) if x != '']
     tag_list = [TagModel.objects.get_or_create(title=tag)[0] for tag in tags]
 
     entry_category = Categories.objects.get(id=int(entry_category))
