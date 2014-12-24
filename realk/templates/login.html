@@ -1,0 +1,11 @@
+{% if with_layout %}{% include 'layout/header.html' %}{% endif %}
+<section class="container">
+    <div class="login">
+    <form method="post" action="/blog/login/{{location}}/">
+    <p><input type="text" id="userID" name="userID" value="" placeholder="User ID"/></p>
+    <p></label><input type="password" id="userPW" name="userPW" value="" placeholder="Password"/></p>
+    <p><input type="submit" value="로그인"></p>
+    </form>
+    </div>
+</section>
+{% if with_layout %}{% include 'layout/footer.html' %}{% endif %}

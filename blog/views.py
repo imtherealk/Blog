@@ -10,6 +10,11 @@ import hashlib
 
 
 def index(request, page=1):
+    if 'blog_login_sess' in request.session:
+        login = True
+    else:
+        login = False
+
     page = int(page)
     per_page = 5
     last_page = int(Entries.objects.count()/per_page)
@@ -32,7 +37,9 @@ def index(request, page=1):
         'page_title': page_title,
         'entries': entries,
         'current_page': page,
-        'page_range': page_range
+        'page_range': page_range,
+        'login': login,
+        'location': 'index'
     })
     return HttpResponse(tpl.render(ctx))
 
@@ -64,14 +71,18 @@ def read(request, entry_id=None):
 
 
 def write_form(request):
-    page_title = '블로그 글 쓰기'
-    categories = Categories.objects.all()
-    tpl = loader.get_template('write.html')
-    ctx = Context({
-        'page_title': page_title,
-        'categories': categories
-    })
-    return HttpResponse(tpl.render(ctx))
+    if 'blog_login_sess' in request.session:
+        page_title = '블로그 글 쓰기'
+        categories = Categories.objects.all()
+        tpl = loader.get_template('write.html')
+        ctx = Context({
+            'page_title': page_title,
+            'categories': categories
+        })
+        return HttpResponse(tpl.render(ctx))
+    else:
+        return login_form(request, 'write_form', True)
+
 
 
 @csrf_exempt
@@ -102,13 +113,15 @@ def add_post(request):
 
 @csrf_exempt
 def delete_post(request, entry_id=None):
-    try:
-        del_entry = Entries.objects.get(id=int(entry_id))
-    except:
-        return HttpResponse("해당 글이 없습니다")
-    del_entry.delete()
-
-    return redirect('blog.views.index', page=1)
+    if 'blog_login_sess' in request.session:
+        try:
+            del_entry = Entries.objects.get(id=int(entry_id))
+        except:
+            return HttpResponse("해당 글이 없습니다")
+        del_entry.delete()
+        return redirect('blog.views.index', page=1)
+    else:
+        return login_form(request, 'index', True)
 
 
 @csrf_exempt
@@ -170,11 +183,32 @@ def get_comments(request, entry_id=None, is_inner=False):
         return HttpResponse(tpl.render(ctx))
 
 
-def login(request):
-    request.session['blog_login_sess'] = 'realk'
-    return HttpResponse('[%s] logged in successfully' % request.session['blog_login_sess'])
+@csrf_exempt
+def login_form(request, location='index', with_layout=False):
+    page_title = '로그인'
+    tpl = loader.get_template('login.html')
+    ctx = Context({
+        'page_title': page_title,
+        'location': location,
+        'with_layout': with_layout
+    })
+    return HttpResponse(tpl.render(ctx))
+
+
+@csrf_exempt
+def login(request, location='index'):
+    admin_id = 'real'
+    admin_pw = hashlib.md5('1234'.encode('utf-8')).hexdigest()
+
+    user_id = request.POST.get("userID", '')
+    user_pwd = hashlib.md5(request.POST.get("userPW", '').encode('utf-8')).hexdigest()
+    if user_id == admin_id and user_pwd == admin_pw:
+        request.session['blog_login_sess'] = user_id
+        return redirect('blog.views.'+location)
+    else:
+        return HttpResponse('아이디 또는 비밀번호가 틀렸습니다.')
 
 
 def logout(request):
     del request.session['blog_login_sess']
-    return HttpResponse('logged out successfully')
+    return redirect('blog.views.index')
