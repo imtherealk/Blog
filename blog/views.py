@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -9,12 +9,15 @@ import json
 import hashlib
 
 
+def root(request):
+    return HttpResponseRedirect('/blog/')
+
+
 def index(request, page=1):
     if 'blog_login_sess' in request.session:
         login = True
     else:
         login = False
-
     page = int(page)
     per_page = 5
     last_page = int(Entries.objects.count()/per_page)

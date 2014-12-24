@@ -4,6 +4,7 @@ from django.conf import settings
 
 admin.autodiscover()
 urlpatterns = patterns('',
+    url(r'^$', 'blog.views.root'),
     url(r'^blog/$', 'blog.views.index'),
     url(r'^blog/page/(?P<page>[-]?\d+)/$', 'blog.views.index'),
     url(r'^blog/entry/(?P<entry_id>\d+)/$', 'blog.views.read'),
