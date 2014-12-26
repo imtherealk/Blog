@@ -3,7 +3,7 @@
 <a href="/blog/logout">로그아웃</a>
 {% else %}{% include 'login.html' %}{% endif %}
 <h1>{{page_title}}</h1>
-<div id="content">
+<div id="post">
     {% for entry in entries %}
     <div class="post_entry">
         <h3 id="post_{{entry.id}}" class="post_title"><a href="/blog/entry/{{entry.id}}">

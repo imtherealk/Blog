@@ -1,8 +1,8 @@
 {% include 'layout/header.html' %}
 
 <h1>{{page_title}}</h1>
-<div id="content">
-    <div class="post_entry">
+    <div id="post">
+        <div class="post_entry">
         <h3 id="post_{{current_entry.id}}" class="post_title">
             <a href="/blog/entry/{{current_entry.id}}">{{current_entry.title}}</a>
         </h3>
@@ -25,11 +25,11 @@
         </div>
 
     </div>
-
+    <div class="btns">
     <form method="post" action="/blog/entry/{{current_entry.id}}/delete/">
-      <p><input type="submit" value="글 삭제"></p>
-    </form>
-
+        <input type="submit" value="삭제"></form>
+    <a href="/blog/"><input type="submit" value="목록"></form></a>
+    </div>
     <ul>
         {% if prev_entry %}
         <li><a href="/blog/entry/{{prev_entry.id}}">이전글 ({{prev_entry.title}})</a></li>
@@ -39,6 +39,5 @@
         <li><a href="/blog/entry/{{next_entry.id}}">다음글 ({{next_entry.title}})</a></li>
         {% endif %}
     </ul>
-</div>
 
 {% include 'layout/footer.html' %}
