@@ -74,18 +74,16 @@ def read(request, entry_id=None):
 
 
 def write_form(request):
-    if 'blog_login_sess' in request.session:
-        page_title = '블로그 글 쓰기'
-        categories = Categories.objects.all()
-        tpl = loader.get_template('write.html')
-        ctx = Context({
-            'page_title': page_title,
-            'categories': categories
-        })
-        return HttpResponse(tpl.render(ctx))
-    else:
+    if 'blog_login_sess' not in request.session:
         return login_form(request, 'write_form', True)
-
+    page_title = '블로그 글 쓰기'
+    categories = Categories.objects.all()
+    tpl = loader.get_template('write.html')
+    ctx = Context({
+        'page_title': page_title,
+        'categories': categories
+    })
+    return HttpResponse(tpl.render(ctx))
 
 
 @csrf_exempt
