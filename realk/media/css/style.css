@@ -152,9 +152,14 @@ input[type=submit] {
   border-color: #b4ccce #b3c0c8 #9eb9c2;
   outline: 0;
 }
-.btns {
+.etc {
+  width:750px;
+  display:inline-block;
+  overflow: auto;
+  white-space: nowrap;
+  margin:0px;
 }
-.btns input[type=submit]{
+.etc input[type=submit] {
   float: right;
 }
 input[type=submit]:active {
