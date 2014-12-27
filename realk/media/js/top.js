@@ -18,7 +18,7 @@ var add_comment = function(form_elt){
                 parameters: form_elt.serialize(),
                 onSuccess: function(req) {
                     if(req.responseText.isJSON()){
-                        var_result = req.responseText.evalJSON(true);
+                        var _result = req.responseText.evalJSON(true);
                         $('comment_box_'+_result['entry_id']).update(_result['msg']);
                     }
                     else{

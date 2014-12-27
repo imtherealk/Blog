@@ -80,6 +80,7 @@ def read(request, entry_id=None):
     })
     return HttpResponse(tpl.render(ctx))
 
+
 @login_required
 def write_form(request):
     page_title = '블로그 글 쓰기'
