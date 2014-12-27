@@ -125,15 +125,12 @@ def add_post(request):
 @csrf_exempt
 @login_required
 def delete_post(request, entry_id=None):
-    if 'blog_login_sess' in request.session:
-        try:
-            del_entry = Entries.objects.get(id=int(entry_id))
-        except Entries.DoesNotExist:
-            return HttpResponse("해당 글이 없습니다")
-        del_entry.delete()
-        return redirect('blog.views.index', page=1)
-    else:
-        return login_form(request, 'index', True)
+    try:
+        del_entry = Entries.objects.get(id=int(entry_id))
+    except Entries.DoesNotExist:
+        return HttpResponse("해당 글이 없습니다")
+    del_entry.delete()
+    return redirect('blog.views.index', page=1)
 
 
 @csrf_exempt
@@ -196,7 +193,7 @@ def get_comments(request, entry_id=None, is_inner=False):
 
 
 @csrf_exempt
-def login_form(request, location='index', with_layout=False):
+def login_form(request, location='index', with_layout=True):
     page_title = '로그인'
     tpl = loader.get_template('login.html')
     ctx = Context({

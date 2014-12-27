@@ -18,7 +18,7 @@ class Categories(models.Model):
 class Entries(models.Model):
     title = models.CharField(max_length=80, null=False)
     content = models.TextField(null=False)
-    created = models.DateTimeField(auto_now_add=False, auto_now=True)
+    created = models.DateTimeField(auto_now_add=True, auto_now=False)
     category = models.ForeignKey(Categories)
     tags = models.ManyToManyField(TagModel)
     comment_num = models.PositiveSmallIntegerField(default=0, null=True)
