@@ -1,6 +1,7 @@
 {% include 'layout/header.html' %}
 {% if login %}
-<a href="/blog/logout">로그아웃</a>
+<li>username : {{user}}</li>
+<li><a href="/blog/logout">로그아웃</a></li>
 {% else %}{% include 'login.html' %}{% endif %}
 <h1>{{page_title}}</h1>
 <div id="post">

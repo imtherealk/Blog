@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from blog.models import Entries, Categories, TagModel, Comments
 from django.template import Context, loader
+from django.contrib.auth import authenticate, login, logout
 import json
 import hashlib
 
@@ -17,7 +18,7 @@ def root(request):
 def login_required(fn):
     @functools.wraps(fn)
     def wrapper(request, *args, **kwargs):
-        if 'blog_login_sess' in request.session:
+        if request.user.is_authenticated():
             return fn(request, *args, **kwargs)
         else:
             return redirect('blog.views.login_form')
@@ -25,7 +26,7 @@ def login_required(fn):
 
 
 def index(request, page=1):
-    log_in = 'blog_login_sess' in request.session
+    log_in = request.user.is_authenticated()
     page = int(page)
     per_page = 5
     last_page = int(Entries.objects.count()/per_page)
@@ -50,7 +51,7 @@ def index(request, page=1):
         'current_page': page,
         'page_range': page_range,
         'login': log_in,
-        'location': 'index'
+        'user': request.user
     })
     return HttpResponse(tpl.render(ctx))
 
@@ -193,36 +194,32 @@ def get_comments(request, entry_id=None, is_inner=False):
 
 
 @csrf_exempt
-def login_form(request, location='index', with_layout=True):
+def login_form(request, with_layout=True):
     page_title = '로그인'
     tpl = loader.get_template('login.html')
     ctx = Context({
         'page_title': page_title,
-        'location': location,
         'with_layout': with_layout
     })
     return HttpResponse(tpl.render(ctx))
 
 
 @csrf_exempt
-def login(request, location='index'):
-    admin_id = 'real'
-    admin_pw = hashlib.md5('1234'.encode('utf-8')).hexdigest()
-    u_id = request.POST.get("ID", '')
-    u_pwd = hashlib.md5(request.POST.get("PW", '').encode('utf-8')).hexdigest()
-    if u_id == admin_id and u_pwd == admin_pw:
-        request.session['blog_login_sess'] = u_id
-        return redirect('blog.views.'+location)
+def login_view(request):
+    username = request.POST['ID']
+    password = request.POST['PW']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            return redirect('blog.views.index')
+        else:
+            return HttpResponse('ㄴㄴ')
     else:
         return HttpResponse('아이디 또는 비밀번호가 틀렸습니다.')
 
 
 @login_required
-def logout(request):
-    """로그아웃을 합니다.
-
-    :param request:
-    :return:
-    """
-    del request.session['blog_login_sess']
+def logout_view(request):
+    logout(request)
     return redirect('blog.views.index')
