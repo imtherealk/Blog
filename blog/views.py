@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from blog.models import Entries, Categories, TagModel, Comments
 from django.template import Context, loader
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 import json
 import hashlib
 
@@ -15,18 +16,8 @@ def root(request):
     return HttpResponseRedirect('/blog/')
 
 
-def login_required(fn):
-    @functools.wraps(fn)
-    def wrapper(request, *args, **kwargs):
-        if request.user.is_authenticated():
-            return fn(request, *args, **kwargs)
-        else:
-            return redirect('blog.views.login_form')
-    return wrapper
-
-
 def index(request, page=1):
-    log_in = request.user.is_authenticated()
+    log_in = request.user.is_active
     page = int(page)
     per_page = 5
     last_page = int(Entries.objects.count()/per_page)
@@ -199,24 +190,25 @@ def login_form(request, with_layout=True):
     tpl = loader.get_template('login.html')
     ctx = Context({
         'page_title': page_title,
-        'with_layout': with_layout
+        'with_layout': with_layout,
     })
     return HttpResponse(tpl.render(ctx))
 
 
 @csrf_exempt
 def login_view(request):
-    username = request.POST['ID']
-    password = request.POST['PW']
+    username = request.POST.get('ID', '')
+    password = request.POST.get('PW', '')
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
             login(request, user)
-            return redirect('blog.views.index')
+            redirect_to = request.POST.get("next", '/blog/')
+            return HttpResponseRedirect(redirect_to)
         else:
-            return HttpResponse('ㄴㄴ')
+            return HttpResponse('Not active user')
     else:
-        return HttpResponse('아이디 또는 비밀번호가 틀렸습니다.')
+        return HttpResponse('Wrong ID/PW ')
 
 
 @login_required

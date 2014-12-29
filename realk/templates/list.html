@@ -4,6 +4,9 @@
 <li><a href="/blog/logout">로그아웃</a></li>
 {% else %}{% include 'login.html' %}{% endif %}
 <h1>{{page_title}}</h1>
+<div class="etc">
+    <a href="/blog/write/"><input type="submit" value="글쓰기"></a>
+</div>
 <div id="post">
     {% for entry in entries %}
     <div class="post_entry">
