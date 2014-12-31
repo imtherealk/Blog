@@ -175,3 +175,46 @@ input[type=submit]:active, input[type=button]:active {
 .post_txtarea {
     height: 200px;
 }
+
+.pw_layer {
+  display: none;
+}
+
+
+.pop_pw_box{
+  z-index:300;position:relative;
+}
+.pop_pw_box .box_pp{
+  position:absolute;top:-50px;right:40px;padding:0px 15px 8px 15px;
+  padding:5px 15px;
+  width:204px;
+  height:120px;
+  background:#fff;
+  border:1px solid #4f4f4f;
+  margin: 0 auto;
+}
+.pp_pw{margin:10px 0 6px 0;font-weight:bold;color:#1f1f1f;background:url(http://nstatic.dcinside.com/dgn/gallery/images/icon_arrow_reply_d.gif) 0 center no-repeat;padding-left:15px;}
+.pp_input input[type=password] {
+  width:155px;
+  height:17px;
+  line-height:15px;
+  border:1px solid #c9c9c9;
+  background:#f5f5f5;
+}
+.pp_input img{vertical-align:middle}
+
+.etc2 {
+  float: left;
+  position: relative;
+  left: 50%;
+}
+
+.etc2_re {
+  float: left;
+  position: relative;
+  left: -50%;
+}
+.etc2 input[type=button], .etc2 input[type=submit] { 
+  display:inline-block;
+  vertical-align: top;
+}

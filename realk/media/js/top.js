@@ -36,3 +36,37 @@ var delete_confirm = function(url) {
         location.href = url
     }
 }
+
+var open_box = function(i) {
+    var elt = $('pw_layer_'+i);
+    elt.style.display = 'block';
+}
+
+var close_box = function(i) {
+    $('pw_layer_'+i).hide();
+}
+var pw_check = function(form_elt){
+    var form_elt = $(form_elt);
+
+    var ajax = new Ajax.Request(form_elt.action, {
+                method: form_elt.method,
+                parameters: form_elt.serialize(),
+                onSuccess: function(req) {
+                    if(req.responseText.isJSON()){
+                        var _result = req.responseText.evalJSON(true);
+                        if(_result['result']){
+                          $('comment_box_'+_result['entry_id']).update(_result['msg']);
+                        }
+                        else{
+                            alert("비밀번호가 틀렸습니다.");
+                        }
+                    }
+                    else{
+                        alert(req.responseText);
+                    }
+                },
+                onFailure: function(req){
+
+                }
+    });
+}

@@ -226,6 +226,30 @@ def get_comments(request, entry_id=None, is_inner=False):
 
 
 @csrf_exempt
+def delete_comment(request, cmt_id=None):
+    try:
+        comment = Comments.objects.get(id=cmt_id)
+    except Comments.DoesNotExist:
+        raise Http404
+    entry = comment.entry
+    pwd = request.POST.get('password', '')
+    pwd = hashlib.md5(pwd.encode('utf-8')).hexdigest()
+    if pwd == comment.password:
+        comment.delete()
+        entry.comment_num -= 1
+        entry.save()
+        result = True
+    else:
+        result = False
+    return_data = {
+        'result': result,
+        'entry_id': entry.id,
+        'msg': get_comments(request, entry.id, True)
+    }
+    return HttpResponse(json.dumps(return_data))
+
+
+@csrf_exempt
 def login_form(request, with_layout=True):
     page_title = '로그인'
     tpl = loader.get_template('login.html')
@@ -257,3 +281,4 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('blog.views.index')
+
