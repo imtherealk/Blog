@@ -191,19 +191,20 @@ def login_form(request, with_layout=True):
     ctx = Context({
         'page_title': page_title,
         'with_layout': with_layout,
+        'next': request.GET.get('next'),
     })
     return HttpResponse(tpl.render(ctx))
 
 
 @csrf_exempt
 def login_view(request):
+    redirect_to = request.POST.get('next', '')
     username = request.POST.get('ID', '')
     password = request.POST.get('PW', '')
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
             login(request, user)
-            redirect_to = request.POST.get("next", '/blog/')
             return HttpResponseRedirect(redirect_to)
         else:
             return HttpResponse('Not active user')
