@@ -26,8 +26,12 @@
         </div>
     </div>
     <div class="etc">
-        <a href="/blog/entry/{{current_entry.id}}/delete/"><input type="submit" value="삭제"></a>
-        <a href="/blog/"><input type="submit" value="목록"></a>
+        {% if login %}
+        <a href="/blog/entry/{{current_entry.id}}/delete" onclick="delete_confirm(this.href); return false;">
+            <input type="button" value="삭제"></a>
+        <a href="/blog/entry/{{current_entry.id}}/modify"><input type="button" value="수정"></a>
+        {% endif %}
+        <a href="/blog/"><input type="button" value="목록"></a>
 
 
         {% if prev_entry %}

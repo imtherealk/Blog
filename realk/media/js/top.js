@@ -29,3 +29,10 @@ var add_comment = function(form_elt){
                 }
     });
 }
+
+
+var delete_confirm = function(url) {
+    if(confirm("정말 삭제할까요?") == true) {
+        location.href = url
+    }
+}

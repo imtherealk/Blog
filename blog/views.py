@@ -48,6 +48,7 @@ def index(request, page=1):
 
 
 def read(request, entry_id=None):
+    log_in = request.user.is_active
     page_title = '블로그 글 읽기!'
     try:
         current_entry = Entries.objects.get(id=int(entry_id))
@@ -69,6 +70,7 @@ def read(request, entry_id=None):
         'prev_entry': prev_entry,
         'next_entry': next_entry,
         'comments': comments,
+        'login': log_in,
     })
     return HttpResponse(tpl.render(ctx))
 
@@ -116,11 +118,50 @@ def add_post(request):
 
 @csrf_exempt
 @login_required
+def modify_form(request, entry_id=None):
+    modify_entry = Entries.objects.get(id=int(entry_id))
+    categories = Categories.objects.all()
+
+    tpl = loader.get_template('modify.html')
+    ctx = Context({
+        'page_title': '수정',
+        'entry': modify_entry,
+        'categories': categories,
+    })
+    return HttpResponse(tpl.render(ctx))
+
+
+@csrf_exempt
+@login_required
+def update_post(request, entry_id=None):
+    update_entry = Entries.objects.get(id=int(entry_id))
+    update_entry.title = request.POST.get('title', '')
+    update_entry.content = request.POST.get('content', '')
+    update_entry.category = \
+        Categories.objects.get(id=int(request.POST.get('category', '')))
+    if update_entry.category == '':
+        return HttpResponse("카테고리 입력")
+    tags = [x for x in
+            (x.strip() for x in request.POST.get('tags', '').split(','))
+            if x != '']
+    tag_list = [TagModel.objects.get_or_create(title=tag)[0] for tag in tags]
+    update_entry.tags.clear()
+    for tag in tag_list:
+        update_entry.tags.add(tag)
+    if tag_list:
+        update_entry.save()
+
+    return redirect('blog.views.read', entry_id=entry_id)
+
+
+@csrf_exempt
+@login_required
 def delete_post(request, entry_id=None):
     try:
         del_entry = Entries.objects.get(id=int(entry_id))
     except Entries.DoesNotExist:
         return HttpResponse("해당 글이 없습니다")
+
     del_entry.delete()
     return redirect('blog.views.index', page=1)
 
