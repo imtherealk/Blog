@@ -1,0 +1,7 @@
+<form method="post" action="/blog/update/comment/{{comment.id}}/" onsubmit="update_comment(this); return false;">
+    <input type="hidden" name="entry_id" value="{{entry.id}}"/>
+    <p><input type="text" id="name" name="name" value="{{comment.name}}" placeholder="이름"/></p>
+    <p><input type="password" id="password" name="password" value="" placeholder="password"/></p>
+    <p><textarea class="cmt_txtarea" id="content" name="content">{{comment.content}}</textarea></p>
+    <p><input type="submit" value="댓글 수정"/></p>
+</form>

@@ -3,21 +3,44 @@
     {% if comments|length %}
     <ul>
     {% for comment in comments %}
+        <div id="comment_{{comment.id}}">
         <li>{{comment.name}}님이 {{comment.created}}에 남긴 댓글
-        (<a href="">수정</a> / <a href="" onclick="open_box('{{comment.id}}');return false;">삭제</a>)
-        <p>{{comment.content}}</p></li>
+        (<a href=""onclick="open_box1('{{comment.id}}');return false;">수정</a> / <a href="" onclick="open_box2('{{comment.id}}');return false;">삭제</a>)
+        <p>{{comment.content}}</p></li></div>
 
-    <form method="post" action="/blog/del/comment/{{comment.id}}/" onsubmit="pw_check(this); return false;">
-    <div id="pw_layer_{{comment.id}}" class="pw_layer" >
+    <div id="cmt_form_{{comment.id}}" style="display:none">
+        {% include 'modify_cmt.html' %}
+    </div>
+
+    <form method="post" action="/blog/del/comment/{{comment.id}}/" onsubmit="del_cmt(this); return false;">
+    <div id="pw_layer2_{{comment.id}}" class="pw_layer" >
         <div class="pop_pw_box" style="">
             <div class="box_pp">
                 <p class="pp_pw">댓글 삭제 - 비밀번호 입력</p>
                 <p class="pp_input">
-                    <input type="password" name="password" id="password"></p>
+                    <input type="password" name="password" id="password2"></p>
             <div class="etc2">
                 <div class="etc2_re">
                 <a href="" ><input type="submit" value="삭제"></a>
-                <a href="" onclick="close_box('{{comment.id}}');return false;"><input type="button" value="취소"></a>
+                <a href="" onclick="close_box2('{{comment.id}}');return false;"><input type="button" value="취소"></a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+    <form method="post" action="/blog/pw_check/{{comment.id}}/" onsubmit="pw_check(this); return false;">
+    <div id="pw_layer1_{{comment.id}}" class="pw_layer" >
+        <div class="pop_pw_box" style="">
+            <div class="box_pp">
+                <p class="pp_pw">댓글 수정 - 비밀번호 입력</p>
+                <p class="pp_input">
+                    <input type="password" name="password" id="password1"></p>
+            <div class="etc2">
+                <div class="etc2_re">
+                <a href="" ><input type="submit" value="수정"></a>
+                <a href="" onclick="close_box1('{{comment.id}}');return false;"><input type="button" value="취소"></a>
                 </div>
             </div>
             </div>

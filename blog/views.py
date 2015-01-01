@@ -250,6 +250,42 @@ def delete_comment(request, cmt_id=None):
 
 
 @csrf_exempt
+def update_comment(request, cmt_id=None):
+    update_cmt = Comments.objects.get(id=int(cmt_id))
+    entry = update_cmt.entry
+    update_cmt.name = request.POST.get('name', '')
+    update_cmt.content = request.POST.get('content', '')
+    pwd = request.POST.get('password', '')
+    update_cmt.password = hashlib.md5(pwd.encode('utf-8')).hexdigest()
+    update_cmt.save()
+    return_data = {
+        'entry_id': entry.id,
+        'msg': get_comments(request, entry.id, True)
+    }
+    return HttpResponse(json.dumps(return_data))
+
+
+@csrf_exempt
+def pw_check(request, cmt_id=None):
+    try:
+        comment = Comments.objects.get(id=cmt_id)
+    except Comments.DoesNotExist:
+        raise Http404
+    entry = comment.entry
+    pwd = request.POST.get('password', '')
+    pwd = hashlib.md5(pwd.encode('utf-8')).hexdigest()
+    if pwd == comment.password:
+        result = True
+    else:
+        result = False
+    return_data = {
+        'result': result,
+        'cmt_id': cmt_id,
+    }
+    return HttpResponse(json.dumps(return_data))
+
+
+@csrf_exempt
 def login_form(request, with_layout=True):
     page_title = '로그인'
     tpl = loader.get_template('login.html')
