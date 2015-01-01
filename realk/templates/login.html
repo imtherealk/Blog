@@ -7,7 +7,9 @@
     <div style="text-align:center">
         <p><input type="submit" value="로그인"/></p>
     </div>
+    {% if next %}
     <p><input type="hidden" name="next" value="{{ next }}"/></p>
+    {% endif %}
     </form>
     </div>
 </section>

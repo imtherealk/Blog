@@ -94,3 +94,4 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = ROOT_PATH + '/media/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

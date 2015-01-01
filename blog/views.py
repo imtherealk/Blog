@@ -292,14 +292,14 @@ def login_form(request, with_layout=True):
     ctx = Context({
         'page_title': page_title,
         'with_layout': with_layout,
-        'next': request.GET.get('next'),
+        'next': request.GET.get('next', '/blog/'),
     })
     return HttpResponse(tpl.render(ctx))
 
 
 @csrf_exempt
 def login_view(request):
-    redirect_to = request.POST.get('next', '')
+    redirect_to = request.POST.get('next', '/blog/')
     username = request.POST.get('ID', '')
     password = request.POST.get('PW', '')
     user = authenticate(username=username, password=password)
