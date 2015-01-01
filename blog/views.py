@@ -17,7 +17,7 @@ def root(request):
 
 
 def index(request, page=1):
-    log_in = request.user.is_active
+    log_in = request.user.is_authenticated
     page = int(page)
     per_page = 5
     last_page = int(Entries.objects.count()/per_page)
@@ -48,7 +48,7 @@ def index(request, page=1):
 
 
 def read(request, entry_id=None):
-    log_in = request.user.is_active
+    log_in = request.user.is_authenticated
     page_title = '블로그 글 읽기!'
     try:
         current_entry = Entries.objects.get(id=int(entry_id))
