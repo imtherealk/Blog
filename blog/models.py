@@ -22,6 +22,8 @@ class Entries(models.Model):
     category = models.ForeignKey(Categories)
     tags = models.ManyToManyField(TagModel)
     comment_num = models.PositiveSmallIntegerField(default=0, null=True)
+    IMAGE_DIR = 'sandbox/entry-images'
+    image = models.ImageField(upload_to=IMAGE_DIR, null=True, blank=True)
 
 
 class Comments(models.Model):

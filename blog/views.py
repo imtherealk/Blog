@@ -104,8 +104,11 @@ def add_post(request):
             if x != '']
     tag_list = [TagModel.objects.get_or_create(title=tag)[0] for tag in tags]
 
+    image = request.FILES.get('image', None)
+
     category = Categories.objects.get(id=int(category))
-    new_entry = Entries(title=title, content=content, category=category)
+    new_entry = Entries(title=title, content=content, category=category,
+                        image=image)
     new_entry.save()
 
     for tag in tag_list:

@@ -11,7 +11,12 @@
                 <a href="/blog/entry/{{current_entry.id}}">{{current_entry.created}}</a>
             </p>
 
-            <div class="content_box">{{current_entry.content|linebreaks}}</div>
+            <div class="content_box">
+                {% if current_entry.image != None %}
+                    <img src="{{ current_entry.image.url }}" />
+                {% endif %}
+                {{current_entry.content|linebreaks}}
+            </div>
 
             <ul class="post_meta">
             <li>태그 : {% for tag in current_entry.tags.all %}

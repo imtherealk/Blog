@@ -1,7 +1,7 @@
 {% include 'layout/header.html' %}
 <h1>{{page_title}}</h1>
 
-<form method="post" action="/blog/add/post/">
+<form method="post" action="/blog/add/post/" enctype="multipart/form-data">
     <p><input type="text" id="title" name="title" value="" placeholder="제목을 입력하세요."/></p>
     <p><select name="category" id="category">
             <option value="">카테고리 선택</option>
@@ -11,6 +11,7 @@
         </select></p>
     <p><textarea class="post_txtarea" id="content" name="content"></textarea></p>
     <p><label for="tags">태그 </label><input type="text" id="tags" name="tags" value=""></p>
+    <p><label for="image">이미지</label><input type="file" id="image" name="image" accept="image/*"></p>
     <p><input type="submit" value="제출하기"></p>
 </form>
 {% include 'layout/footer.html' %}
